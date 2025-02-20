@@ -1,0 +1,45 @@
+{
+    "movies": [
+      {
+        "id": "1",
+        "imageUrl": "assets/images/movie1.jpg",
+        "title": "Nhà Gia Tiên",
+        "genres": "Hài, Gia Đình, Tâm Linh",
+        "description": "A superhero film directed by Christopher Nolan.",
+        "rating": 9.0
+      },
+      {
+        "id": "2",
+        "imageUrl": "assets/images/movie2.jpg",
+        "title": "Dark Nuns",
+        "genres": "Action, Crime, Drama",
+        "description": "A sci-fi thriller about dream manipulation.",
+        "rating": 8.8
+      },
+      {
+        "id": "3",
+        "imageUrl": "assets/images/movie3.jpg",
+        "title": "Nụ Hôn Bạc Tỷ",
+        "genres": "Action, Crime, Drama",
+        "description": "A space exploration film by Christopher Nolan.",
+        "rating": 8.6
+      },
+      {
+        "id": "4",
+        "imageUrl": "assets/images/movie1.jpg",
+        "title": "Avengers: Endgame EndgameEndgameEndgameEndgame",
+        "genres": "Action, Crime, Drama",
+        "description": "The epic conclusion to the Avengers saga.",
+        "rating": 8.4
+      },
+      {
+        "id": "5",
+        "imageUrl": "assets/images/movie1.jpg",
+        "title": "Parasite",
+        "genres": "Action, Crime, Drama",
+        "description": "A South Korean thriller and social satire.",
+        "rating": 8.6
+      }
+    ]
+  }
+  

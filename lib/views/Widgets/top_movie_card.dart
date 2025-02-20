@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop/models/Movie.dart';
 
 class TopMovieCard extends StatelessWidget {
@@ -7,59 +8,92 @@ class TopMovieCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Stack(
-          fit: StackFit.expand,
+    return GestureDetector(
+      onTap: () {
+        // Chuyển đến trang chi tiết phim
+        Navigator.pushNamed(
+          context,
+          '/detail_movie',
+          arguments: movie,
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              movie.imageUrl,
-              fit: BoxFit.cover,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.7),
-                  ],
-                ),
+            // Hình ảnh phim (bo góc, giữ đúng tỉ lệ)
+            ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              child: AspectRatio(
+                aspectRatio: 5 / 6.5, // Giữ tỉ lệ ảnh 16:9
+                child: movie.imageUrl.startsWith('http')
+                    ? Image.network(
+                        movie.imageUrl,
+                        fit: BoxFit.contain, // Cắt ảnh vừa với khung
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        },
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(
+                          child: Icon(Icons.broken_image,
+                              color: Colors.red, size: 50),
+                        ),
+                      )
+                    : Image.asset(
+                        movie.imageUrl,
+                        fit: BoxFit.cover,
+                      ),
               ),
-              padding: const EdgeInsets.all(15),
+            ),
+
+            // Thông tin phim
+            Padding(
+              padding: const EdgeInsets.all(12),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    movie.title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/star_icon.svg',
+                        height: 14,
+                        width: 14,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        '${movie.rating}/10 (700 Đánh giá)',
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w400),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    movie.description,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                    movie.title,
+                    style: const TextStyle(
                       fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    movie.genres, // Thể loại phim
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade700,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

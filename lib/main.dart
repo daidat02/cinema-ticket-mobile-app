@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shop/views/Screens/home_page.dart';
+import 'package:shop/routes/routes.dart';
+import 'package:shop/views/Screens/main_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,24 +12,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(
+        splashColor: Colors.transparent, // Xóa hiệu ứng sóng khi nhấn
+        highlightColor: Colors.transparent, // Xóa hiệu ứng sáng khi nhấn giữ
+        hoverColor: Colors.transparent, // Xóa hiệu ứng hover trên desktop
+      ),
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: '/',
+      home: const MainPage(),
+      onGenerateRoute: generateRoute,
     );
-  }
-}
-
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
-
-  @override
-  State<MyWidget> createState() => _MyWidgetState();
-}
-
-class _MyWidgetState extends State<MyWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

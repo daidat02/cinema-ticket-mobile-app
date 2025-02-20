@@ -50,9 +50,11 @@ class _MainAppBarState extends State<MainAppBar> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Chào ${widget.user!.name}",
+                          "Chào, ${widget.user!.name}",
                           style: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                              color: Color.fromARGB(255, 63, 63, 63),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 5),
                         Row(

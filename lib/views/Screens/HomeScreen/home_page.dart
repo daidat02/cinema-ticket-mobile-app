@@ -1,0 +1,174 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shop/models/Movie.dart';
+import 'package:shop/models/User.dart';
+import 'package:shop/services/API/api_moive_services.dart';
+import 'package:shop/views/Screens/HomeScreen/widget/section_header_widget.dart';
+import 'package:shop/views/Screens/HomeScreen/widget/section_title_widget.dart';
+import 'package:shop/views/Widgets/line_widget.dart';
+import 'package:shop/views/Widgets/main_app_bar.dart';
+import 'package:shop/views/Widgets/top_movie_card.dart';
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  User? user;
+  int _currentIndex = 0;
+  List<Movie> movies = [];
+  final MovieService _movieService = MovieService();
+  bool isPressed = false;
+  @override
+  void initState() {
+    super.initState();
+    fetchUser();
+    loadMovies();
+  }
+
+  Future<void> fetchUser() async {
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      user = User(
+        name: 'Yến Vy',
+        membershipType: 'Member',
+        starCount: 5,
+        ticketCount: 9,
+      );
+    });
+  }
+
+  Future<void> loadMovies() async {
+    List<Movie> loadedMovies = await _movieService.loadMovies();
+    setState(() {
+      movies = loadedMovies;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: MainAppBar(user: user),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Search
+              Container(
+                height: 45,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/search_icon.svg',
+                      width: 20,
+                      height: 20,
+                      allowDrawingOutsideViewBox: true, // Fix lỗi filter
+                    ),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Tìm kiếm phim',
+                          hintStyle: TextStyle(fontSize: 14),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Image.asset('assets/images/slide.png')),
+              const SizedBox(height: 20),
+
+              // Top movies
+              Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  child: sectionTitleWidget('Phim Nổi Bật')),
+              movies.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
+                  : SizedBox(
+                      height: 390,
+                      child: FlutterCarousel(
+                        items: movies
+                            .map((movie) => TopMovieCard(movie: movie))
+                            .toList(),
+                        options: CarouselOptions(
+                          height: 460,
+                          viewportFraction: 0.55,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: true,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _currentIndex = index;
+                            });
+                          },
+                          showIndicator: false,
+                        ),
+                      ),
+                    ),
+              LineWidget(),
+              const SizedBox(height: 10),
+
+              sectionHeader('Phim Đang Chiếu', 'Xem tất cả', 0xFF007AFF),
+              SizedBox(
+                height: 340, // Đặt chiều cao rõ ràng cho danh sách phim
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.only(right: 10),
+                  itemCount: movies.length,
+                  itemBuilder: (context, index) {
+                    return SizedBox(
+                      width: 180,
+                      height: 270, // Đặt chiều rộng cố định cho từng item
+                      child: TopMovieCard(movie: movies[index]),
+                    );
+                  },
+                ),
+              ),
+
+              LineWidget(),
+              const SizedBox(height: 10),
+
+              sectionHeader('Phim Sắp Chiếu', 'Xem tất cả', 0xFF007AFF),
+
+              SizedBox(
+                height: 340, // Đặt chiều cao rõ ràng cho danh sách phim
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.only(right: 10),
+                  itemCount: movies.length,
+                  itemBuilder: (context, index) {
+                    return SizedBox(
+                      width: 180,
+                      height: 270, // Đặt chiều rộng cố định cho từng item
+                      child: TopMovieCard(movie: movies[index]),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
