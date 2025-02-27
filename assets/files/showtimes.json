@@ -1,0 +1,74 @@
+{
+    "showtimes":[
+        {
+            "_id": "67bc9a24fb362d828fa1624b",
+            "cinemaName": "MovieTicket HÓC MÔN",
+            "showtimes": [
+                {
+                    "_id": "67bcb0fabf24386100944120",
+                    "startTime": "2025-02-25T10:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb0ffbf24386100944122",
+                    "startTime": "2025-02-25T11:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb103bf24386100944124",
+                    "startTime": "2025-02-25T12:30:15.095Z"
+                }
+            ]
+        },
+        {
+            "_id": "67bc9a24fb362d828fa1626b",
+            "cinemaName": "MovieTicket GÒ VẤP",
+            "showtimes": [
+                {
+                    "_id": "67bcb0fabf24386100944120",
+                    "startTime": "2025-02-25T10:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb0ffbf24386100944122",
+                    "startTime": "2025-02-25T11:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb103bf24386100944114",
+                    "startTime": "2025-02-25T12:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb0fabf24386100934120",
+                    "startTime": "2025-02-25T14:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb0fabf24386100944150",
+                    "startTime": "2025-02-25T15:30:15.095Z"
+                }
+            ]
+        },
+        {
+            "_id": "67bc9a24fb362d828fa1626b",
+            "cinemaName": "MovieTicket Quang Trung",
+            "showtimes": [
+                {
+                    "_id": "67bcb0fabf24386100944120",
+                    "startTime": "2025-02-25T10:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb0ffbf24386100944122",
+                    "startTime": "2025-02-25T11:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb103bf24386100944114",
+                    "startTime": "2025-02-25T12:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb0fabf24386100934120",
+                    "startTime": "2025-02-25T14:30:15.095Z"
+                },
+                {
+                    "_id": "67bcb0fabf24386100944150",
+                    "startTime": "2025-02-25T15:30:15.095Z"
+                }
+            ]
+        }
+    ]
+}

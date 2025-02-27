@@ -21,7 +21,6 @@ class _MainPageState extends State<MainPage> {
     const CinemaScreen(),
     const DiscountScreen(),
     const ProfileScreen()
-    // const DetailMovie(),
   ];
 
   void onItemTapped(int index) {

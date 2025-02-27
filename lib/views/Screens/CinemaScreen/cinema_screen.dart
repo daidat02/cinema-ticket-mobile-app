@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class CinemaScreen extends StatefulWidget {
   const CinemaScreen({super.key});
-
   @override
   State<CinemaScreen> createState() => _CinemaState();
 }
@@ -12,7 +11,7 @@ class _CinemaState extends State<CinemaScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Hello, World!'),
+        child: Text('Cinema Screen'),
       ),
     );
   }

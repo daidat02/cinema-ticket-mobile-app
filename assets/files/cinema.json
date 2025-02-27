@@ -1,0 +1,34 @@
+{
+    "cinemas":[
+    {
+      "id": "1",
+      "name": "CGV Vincom",
+      "address": "Vincom Center, Quận 1, TP.HCM",
+      "imageUrl": "assets/images/cgv.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Lotte Cinema",
+      "address": "Lotte Mart, Quận 7, TP.HCM",
+      "imageUrl": "assets/images/lotte.jpg"
+    },
+    {
+      "id": "3",
+      "name": "Galaxy Nguyễn Du",
+      "address": "116 Nguyễn Du, Quận 1, TP.HCM",
+      "imageUrl": "assets/images/galaxy.jpg"
+    },
+    {
+      "id": "4",
+      "name": "BHD Star Cineplex",
+      "address": "3-2, Quận 10, TP.HCM",
+      "imageUrl": "assets/images/bhd.jpg"
+    },
+    {
+      "id": "5",
+      "name": "Mega GS Cinema",
+      "address": "19 Cao Thắng, Quận 3, TP.HCM",
+      "imageUrl": "assets/images/mega.jpg"
+    }
+  ]
+}

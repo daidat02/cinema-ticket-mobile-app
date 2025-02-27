@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shop/models/Movie.dart';
+import 'package:shop/models/MovieModel.dart';
 
 class TopMovieCard extends StatelessWidget {
   final Movie movie;
@@ -30,26 +30,28 @@ class TopMovieCard extends StatelessWidget {
             ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(12)),
               child: AspectRatio(
-                aspectRatio: 5 / 6.5, // Giữ tỉ lệ ảnh 16:9
-                child: movie.imageUrl.startsWith('http')
-                    ? Image.network(
-                        movie.imageUrl,
-                        fit: BoxFit.contain, // Cắt ảnh vừa với khung
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        },
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Center(
-                          child: Icon(Icons.broken_image,
-                              color: Colors.red, size: 50),
-                        ),
-                      )
-                    : Image.asset(
-                        movie.imageUrl,
-                        fit: BoxFit.cover,
-                      ),
+                aspectRatio: 5 / 6.5, // Giữ tỉ lệ ảnh
+                child:
+                    movie.imageUrl != null && movie.imageUrl!.startsWith('http')
+                        ? Image.network(
+                            movie.imageUrl!,
+                            fit: BoxFit
+                                .cover, // Thay đổi từ contain sang cover để phù hợp với ảnh từ asset
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Center(
+                              child: Icon(Icons.broken_image,
+                                  color: Colors.red, size: 50),
+                            ),
+                          )
+                        : Image.asset(
+                            movie.imageUrl ?? 'assets/images/placeholder.png',
+                            fit: BoxFit.cover,
+                          ),
               ),
             ),
 
@@ -59,6 +61,7 @@ class TopMovieCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // Thay thế movie.rating bằng cách sử dụng dữ liệu khác hoặc giá trị mặc định
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -68,16 +71,16 @@ class TopMovieCard extends StatelessWidget {
                         width: 14,
                       ),
                       const SizedBox(width: 10),
-                      Text(
-                        '${movie.rating}/10 (700 Đánh giá)',
-                        style: const TextStyle(
+                      const Text(
+                        '8.5/10 (700 Đánh giá)', // Giá trị cứng tạm thời, bạn cần bổ sung trường rating vào model Movie
+                        style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w400),
                       ),
                     ],
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    movie.title,
+                    movie.title ?? 'Chưa có tiêu đề',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -87,7 +90,8 @@ class TopMovieCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    movie.genres, // Thể loại phim
+                    movie.genre ??
+                        'Chưa phân loại', // Sử dụng genre thay vì genres
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade700,

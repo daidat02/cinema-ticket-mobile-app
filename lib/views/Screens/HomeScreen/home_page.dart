@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shop/models/Movie.dart';
+import 'package:shop/models/MovieModel.dart';
 import 'package:shop/models/User.dart';
 import 'package:shop/services/API/api_moive_services.dart';
 import 'package:shop/views/Screens/HomeScreen/widget/section_header_widget.dart';
@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> loadMovies() async {
-    List<Movie> loadedMovies = await _movieService.loadMovies();
+    List<Movie> loadedMovies = await _movieService.loadMoviesApi();
     setState(() {
       movies = loadedMovies;
     });

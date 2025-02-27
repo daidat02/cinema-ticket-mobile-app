@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:shop/routes/routes.dart';
 import 'package:shop/views/Screens/main_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('vi', null);
+
   runApp(const MyApp());
 }
 
