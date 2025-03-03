@@ -143,8 +143,10 @@ class _ShowtimeScreenState extends State<ShowtimeScreen> {
                 itemCount: cinemaShowtimes.length,
                 itemBuilder: (context, index) {
                   var cinema = cinemaShowtimes[index];
+                  final islast = index == cinema.showtimes.length - 1;
                   return CinemaShowtimesWidget(
                     cinema: cinema,
+                    isLast: islast,
                     onShowTimeSelected: (String showTimeId) {
                       print("Selected showtime id: $showTimeId");
                       // Thực hiện các hành động cần thiết, ví dụ: điều hướng đến màn hình đặt vé

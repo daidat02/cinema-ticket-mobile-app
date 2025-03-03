@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop/models/CinemaShowtime.dart';
 import 'package:shop/views/Screens/ShowtimeScreen/widget/showtime_time_item_widget.dart';
 
 class CinemaShowtimesWidget extends StatelessWidget {
   final Function(String) onShowTimeSelected;
+  final bool isLast;
   const CinemaShowtimesWidget(
-      {super.key, required this.cinema, required this.onShowTimeSelected});
+      {super.key,
+      required this.cinema,
+      required this.onShowTimeSelected,
+      required this.isLast});
 
   final CinemaShowtimes cinema;
 
@@ -14,11 +19,13 @@ class CinemaShowtimesWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(bottom: 8, top: 5),
       margin: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: const BoxDecoration(
-          border: Border(
-              bottom: BorderSide(
-                  color: Color.fromARGB(255, 216, 216, 216),
-                  style: BorderStyle.solid))),
+      decoration: BoxDecoration(
+          border: isLast
+              ? null
+              : const Border(
+                  top: BorderSide(
+                      color: Color.fromARGB(255, 216, 216, 216),
+                      style: BorderStyle.solid))),
       child: ExpansionTile(
         tilePadding: EdgeInsets.zero,
         childrenPadding: EdgeInsets.zero,
@@ -31,10 +38,19 @@ class CinemaShowtimesWidget extends StatelessWidget {
             Container(
               height: 50,
               width: 50,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   border: Border.all(
-                      width: 1, color: Colors.black, style: BorderStyle.solid)),
+                      width: 1,
+                      color: const Color(0xffD3D3D3),
+                      style: BorderStyle.solid)),
+              child: SvgPicture.asset(
+                'assets/logo/logo2.svg',
+                fit: BoxFit.contain,
+                width: 40,
+                height: 40,
+              ),
             ),
             const SizedBox(
               width: 5,

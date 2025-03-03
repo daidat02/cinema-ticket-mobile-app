@@ -4,14 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:shop/models/MovieModel.dart';
 
 class MovieService {
-  Future<List<Movie>> loadMovies() async {
-    final String response =
-        await rootBundle.loadString('assets/files/movies.json');
-    final data = json.decode(response);
-
-    return (data['movies'] as List).map((e) => Movie.fromJson(e)).toList();
-  }
-
   Future<List<Movie>> loadMoviesApi() async {
     final url = Uri.parse('http://10.0.2.2:3000/api/movie/');
     try {

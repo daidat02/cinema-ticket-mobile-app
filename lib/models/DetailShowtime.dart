@@ -10,7 +10,7 @@ class DetailShowtime {
   DateTime? startTime;
   Room? room;
   bool? isShown;
-  List<Seat>? bookedSeat;
+  List<String>? bookedSeat;
   int? iV;
 
   DetailShowtime(
@@ -31,10 +31,7 @@ class DetailShowtime {
     room = json['room'] != null ? Room.fromJson(json['room']) : null;
     isShown = json['isShown'];
     if (json['bookedSeat'] != null) {
-      bookedSeat = <Seat>[];
-      json['bookedSeat'].forEach((v) {
-        bookedSeat!.add(Seat.fromJson(v));
-      });
+      bookedSeat = List<String>.from(json['bookedSeat']);
     }
     iV = json['__v'];
   }
@@ -51,7 +48,7 @@ class DetailShowtime {
     }
     data['isShown'] = isShown;
     if (bookedSeat != null) {
-      data['bookedSeat'] = bookedSeat!.map((v) => v.toJson()).toList();
+      data['bookedSeat'] = bookedSeat;
     }
     data['__v'] = iV;
     return data;

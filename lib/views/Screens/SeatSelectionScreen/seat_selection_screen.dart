@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shop/models/DetailShowtime.dart';
+import 'package:shop/models/SeatModel.dart';
+import 'package:shop/services/API/api_showtimes_service.dart';
 import 'package:shop/views/Widgets/btn_bottom_widget.dart';
 import 'package:shop/views/Widgets/line_widget.dart';
 import 'package:shop/views/Widgets/page_appBar_widget.dart';
@@ -13,39 +16,33 @@ class SeatSelectionScreen extends StatefulWidget {
 }
 
 class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
+  final ShowtimesService _showtimesService = ShowtimesService();
   // Controller cho việc phóng to thu nhỏ và di chuyển
   final TransformationController _transformationController =
       TransformationController();
 
+  DetailShowtime? detailShowtime;
   // Danh sách ghế được chọn
-  final List<String> selectedSeats = [];
+  final List<Seat> selectedSeats = [];
+  final bool isSelected = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadDetailShowtime(widget.showtimeId);
+  }
 
-  // Dữ liệu mô phỏng danh sách ghế
-  // true: ghế đã đặt, false: ghế còn trống
-  final List<List<bool>> bookedSeats = List.generate(
-    10, // 10 hàng
-    (row) => List.generate(
-      12, // 12 cột
-      (col) => (row + col) % 5 == 0, // Một số ghế ngẫu nhiên đã được đặt
-    ),
-  );
+  Future<void> loadDetailShowtime(showtimeId) async {
+    DetailShowtime loadDetailShowtime =
+        await _showtimesService.loadDetailShowtime(showtimeId);
 
-  // Danh sách các chữ cái đại diện cho hàng
-  final List<String> rowLabels = [
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J'
-  ];
-
-  // Giá vé (đơn giá)
-  final int ticketPrice = 85000;
+    if (mounted) {
+      setState(() {
+        detailShowtime = loadDetailShowtime;
+      });
+      print(loadDetailShowtime.room?.seats?.length);
+    }
+  }
 
   @override
   void dispose() {
@@ -54,215 +51,117 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   }
 
   // Tính toán tổng tiền
-  int get totalPrice => selectedSeats.length * ticketPrice;
-
+  double totalPrice = 0;
   // Xử lý khi người dùng chọn/bỏ chọn ghế
-  void toggleSeatSelection(int row, int col) {
-    final seatId = '${rowLabels[row]}${col + 1}';
+  void toggleSeatSelection(seat) {
     setState(() {
-      if (selectedSeats.contains(seatId)) {
-        selectedSeats.remove(seatId);
+      if (selectedSeats.contains(seat)) {
+        selectedSeats.remove(seat);
+        totalPrice -= seat?.price;
       } else {
-        selectedSeats.add(seatId);
+        selectedSeats.add(seat ?? '');
+        totalPrice += seat?.price;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Lấy kích thước màn hình để tính toán kích thước ghế phù hợp
-    final screenWidth = MediaQuery.of(context).size.width;
-    // Tính kích thước ghế dựa trên chiều rộng màn hình
-    final seatSize =
-        (screenWidth - 80) / 14; // Chia cho 14 vì có 12 cột ghế + 2 cột nhãn
-
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const PageAppBarWidget(title: 'Movie Ticket Quang Trung'),
+      appBar: PageAppBarWidget(title: detailShowtime?.cinema?.name ?? ''),
       body: Column(
         children: [
-          const SizedBox(height: 16),
           // Màn hình chiếu phim
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            height: 30,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(4),
-            ),
-            alignment: Alignment.center,
-            child: const Text(
-              'MÀN HÌNH',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset(
+                  'assets/icons/line.png',
+                  fit: BoxFit.contain,
+                ),
+                const Text(
+                  'Màn Hình',
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff2C4FA8)),
+                )
+              ],
             ),
           ),
-          const SizedBox(height: 20),
           // Vùng danh sách ghế có thể phóng to, thu nhỏ và di chuyển
           Expanded(
             child: InteractiveViewer(
               transformationController: _transformationController,
-              minScale: 0.5,
-              maxScale: 2.5,
-              boundaryMargin: const EdgeInsets.all(100),
-              child: Center(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Hiển thị danh sách ghế
-                        ...List.generate(
-                          bookedSeats.length,
-                          (row) => Row(
-                            mainAxisSize: MainAxisSize
-                                .min, // Để tránh Row chiếm toàn bộ chiều rộng
-                            children: [
-                              // Hiển thị nhãn hàng
-                              SizedBox(
-                                width: 20,
-                                child: Text(
-                                  rowLabels[row],
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              // Hiển thị các ghế trong một hàng
-                              ...List.generate(
-                                bookedSeats[row].length,
-                                (col) {
-                                  final seatId = '${rowLabels[row]}${col + 1}';
-                                  final isBooked = bookedSeats[row][col];
-                                  final isSelected =
-                                      selectedSeats.contains(seatId);
+              minScale: 0.4, // Giảm tỷ lệ tối thiểu để linh hoạt hơn
+              maxScale: 3.0, // Tăng tỷ lệ tối đa
+              boundaryMargin: const EdgeInsets.all(
+                  100), // Biên giới rộng hơn để di chuyển tự do
+              panEnabled: true,
+              scaleEnabled: true,
+              constrained:
+                  false, // Cho phép nội dung di chuyển ra ngoài giới hạn hiển thị
 
-                                  // Xác định màu sắc ghế dựa vào trạng thái
-                                  Color seatColor;
-                                  if (isBooked) {
-                                    seatColor =
-                                        const Color(0xff0079FF); // Đã đặt
-                                  } else if (isSelected) {
-                                    seatColor =
-                                        const Color(0xff2C4FA8); // Đang chọn
-                                  } else {
-                                    seatColor =
-                                        const Color(0xffD0D1D9); // Chưa đặt
-                                  }
-
-                                  return Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: GestureDetector(
-                                      onTap: isBooked
-                                          ? null
-                                          : () => toggleSeatSelection(row, col),
-                                      child: Container(
-                                        height: seatSize,
-                                        width: seatSize,
-                                        decoration: BoxDecoration(
-                                          color: seatColor,
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          '${col + 1}',
-                                          style: TextStyle(
-                                            color: isBooked || isSelected
-                                                ? Colors.white
-                                                : Colors.black54,
-                                            fontSize: seatSize *
-                                                0.4, // Điều chỉnh kích thước chữ theo kích thước ghế
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(width: 10),
-                              // Hiển thị nhãn hàng ở phía bên phải
-                              SizedBox(
-                                width: 20,
-                                child: Text(
-                                  rowLabels[row],
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+              onInteractionEnd: (details) {
+                // Có thể thêm logic sau khi người dùng kết thúc tương tác
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                width:
+                    (detailShowtime?.room?.colNumber?.toDouble() ?? 10.0) * 50,
+                height:
+                    (detailShowtime?.room?.rowNumber?.toDouble() ?? 10.0) * 60,
+                child: GridView.builder(
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Ngăn GridView cuộn để tránh xung đột
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: detailShowtime?.room?.colNumber ?? 10,
+                    crossAxisSpacing: 7.0,
+                    mainAxisSpacing: 7.0,
                   ),
+                  itemCount: detailShowtime?.room?.seats?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final seat = detailShowtime?.room?.seats?[index];
+
+                    return GestureDetector(
+                      onTap: () {
+                        // Logic chọn ghế của bạn
+                        detailShowtime!.bookedSeat!.contains(seat?.sId)
+                            ? null
+                            : // Nếu ghế đã đặt, không cho nhấn
+                            toggleSeatSelection(seat);
+                      },
+                      child: Container(
+                        width: 35,
+                        height: 35,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4)),
+                          color: selectedSeats.contains(seat)
+                              ? const Color(
+                                  0xff2C4FA8) // Ghế đang chọn có màu xanh đậm
+                              : (detailShowtime?.bookedSeat
+                                          ?.contains(seat?.sId) ??
+                                      false)
+                                  ? const Color(
+                                      0xff0079FF) // Ghế đã đặt có màu xám
+                                  : const Color(0xffD0D1D9), // Màu ghế mặc định
+                        ),
+                        child: Text(
+                          seat?.seatNumber ?? "??",
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
-          ),
-          // Các nút điều khiển thu phóng
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _transformationController.value = Matrix4.identity();
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff2C4FA8),
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(8),
-                  ),
-                  child: const Icon(Icons.home, color: Colors.white),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      final scale =
-                          _transformationController.value.getMaxScaleOnAxis();
-                      if (scale < 2.5) {
-                        _transformationController.value.scale(1.2);
-                      }
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff2C4FA8),
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(8),
-                  ),
-                  child: const Icon(Icons.add, color: Colors.white),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      final scale =
-                          _transformationController.value.getMaxScaleOnAxis();
-                      if (scale > 0.5) {
-                        _transformationController.value.scale(0.8);
-                      }
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff2C4FA8),
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(8),
-                  ),
-                  child: const Icon(Icons.remove, color: Colors.white),
-                ),
-              ],
-            ),
-          ),
+          ), // Các nút điều khiển thu phóng
           const SizedBox(height: 8),
         ],
       ),
@@ -317,9 +216,9 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                           const SizedBox(
                             width: 5,
                           ),
-                          const Text(
-                            'Nhà Gia Tiên',
-                            style: TextStyle(
+                          Text(
+                            detailShowtime?.movie?.title ?? "",
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ],
@@ -329,30 +228,14 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                   const SizedBox(
                     height: 5,
                   ),
-                  const Text(
-                    '14:20 ~ 15:57 | Thứ 5, 27/2/2025 | 2D Phụ đề',
-                    style: TextStyle(fontSize: 13),
+                  Text(
+                    // '14:20 ~ 15:57 | Thứ 5, 27/2/2025 | 2D Phụ đề',
+                    '${DateFormat('HH:mm').format(detailShowtime?.startTime?.toLocal() ?? DateTime.now())} ~ 15:57 | ${DateFormat('EEEE', 'vi').format(detailShowtime?.startTime?.toLocal() ?? DateTime.now())}, ${DateFormat('dd/MM/yyyy').format(detailShowtime?.startTime?.toLocal() ?? DateTime.now())} | 2D Phụ Đề',
+                    style: const TextStyle(fontSize: 13),
                   ),
                   const SizedBox(
                     height: 5,
                   ),
-                  selectedSeats.isNotEmpty
-                      ? Row(
-                          children: [
-                            const Text(
-                              'Ghế: ',
-                              style: TextStyle(fontSize: 13),
-                            ),
-                            Expanded(
-                              child: Text(
-                                selectedSeats.join(", "),
-                                style: const TextStyle(fontSize: 13),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
                   const SizedBox(
                     height: 5,
                   ),
@@ -382,8 +265,16 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                       ),
                     );
                     return;
+                  } else {
+                    Navigator.pushNamed(
+                      context,
+                      '/payment',
+                      arguments: {
+                        'detailShowtime': detailShowtime,
+                        'selectedSeats': selectedSeats,
+                      },
+                    );
                   }
-                  Navigator.pushNamed(context, '/payment');
                 }),
           ],
         ),

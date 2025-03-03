@@ -1,8 +1,6 @@
 class Seat {
   String? sId;
   String? seatNumber;
-  String? row;
-  int? column;
   String? seatType;
   int? price;
   String? room;
@@ -11,8 +9,6 @@ class Seat {
   Seat(
       {this.sId,
       this.seatNumber,
-      this.row,
-      this.column,
       this.seatType,
       this.price,
       this.room,
@@ -21,8 +17,6 @@ class Seat {
   Seat.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     seatNumber = json['seatNumber'];
-    row = json['row'];
-    column = json['column'];
     seatType = json['seatType'];
     price = json['price'];
     room = json['room'];
@@ -33,8 +27,6 @@ class Seat {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = sId;
     data['seatNumber'] = seatNumber;
-    data['row'] = row;
-    data['column'] = column;
     data['seatType'] = seatType;
     data['price'] = price;
     data['room'] = room;
