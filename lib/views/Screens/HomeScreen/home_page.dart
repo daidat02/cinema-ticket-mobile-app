@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop/models/MovieModel.dart';
 import 'package:shop/models/User.dart';
 import 'package:shop/services/API/api_moive_services.dart';
+import 'package:shop/services/stores.dart';
 import 'package:shop/views/Screens/HomeScreen/widget/section_header_widget.dart';
 import 'package:shop/views/Screens/HomeScreen/widget/section_title_widget.dart';
 import 'package:shop/views/Widgets/line_widget.dart';
@@ -23,6 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Movie> movies = [];
   final MovieService _movieService = MovieService();
   bool isPressed = false;
+
   @override
   void initState() {
     super.initState();
@@ -31,14 +33,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchUser() async {
-    await Future.delayed(const Duration(seconds: 2));
+    User? userData = await Storage.getUser();
     setState(() {
-      user = User(
-        name: 'Yến Vy',
-        membershipType: 'Member',
-        starCount: 5,
-        ticketCount: 9,
-      );
+      user = userData;
     });
   }
 

@@ -9,11 +9,14 @@ import 'package:shop/views/Screens/MovieScreen/detail_movie.dart';
 import 'package:shop/views/Screens/PaymentScreen/payment_screen.dart';
 import 'package:shop/views/Screens/SeatSelectionScreen/seat_selection_screen.dart';
 import 'package:shop/views/Screens/ShowtimeScreen/showtime_Screen.dart';
+import 'package:shop/views/Screens/authScreen/login_Screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case '/':
       return MaterialPageRoute(builder: (context) => const MyHomePage());
+    case '/login':
+      return MaterialPageRoute(builder: (context) => const LoginScreen());
     case '/detail_movie':
       final movie = settings.arguments as Movie;
       return MaterialPageRoute(builder: (context) => DetailMovie(movie: movie));

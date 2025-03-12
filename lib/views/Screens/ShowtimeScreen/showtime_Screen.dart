@@ -56,7 +56,7 @@ class _ShowtimeScreenState extends State<ShowtimeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 228, 228, 228),
+      backgroundColor: const Color.fromARGB(255, 251, 248, 248),
       appBar: PageAppBarWidget(title: widget.movie.title ?? '???'),
       body: Column(
         children: [

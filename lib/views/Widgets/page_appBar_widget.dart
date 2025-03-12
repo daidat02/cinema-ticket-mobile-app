@@ -9,28 +9,46 @@ class PageAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.blue,
-        leadingWidth: 30,
-        iconTheme: const IconThemeData(
-          color: Colors.white, // Màu của icon back
+      // Đặt backgroundColor trong suốt để gradient hiển thị
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      // Sử dụng flexibleSpace để thêm gradient
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 148, 170, 237), // Màu đậm ở dưới
+              Color(0xffEEF6FF), // Màu sáng ở trên
+            ],
+          ),
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+      ),
+      leadingWidth: 30,
+      iconTheme: const IconThemeData(
+        color: Color(0xff3B4054), // Màu của icon back
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xff3B4054),
             ),
-            // SvgPicture.asset(
-            //   'assets/icons/close_icon.svg',
-            //   height: 18,
-            //   width: 18,
-            // ),
-          ],
-        ));
+          ),
+          // Nếu cần, có thể bật phần icon này
+          // SvgPicture.asset(
+          //   'assets/icons/close_icon.svg',
+          //   height: 18,
+          //   width: 18,
+          // ),
+        ],
+      ),
+    );
   }
 
   @override

@@ -30,8 +30,8 @@ class DetailShowtime {
     startTime = DateTime.parse(json['startTime']);
     room = json['room'] != null ? Room.fromJson(json['room']) : null;
     isShown = json['isShown'];
-    if (json['bookedSeat'] != null) {
-      bookedSeat = List<String>.from(json['bookedSeat']);
+    if (json['bookedSeats'] != null) {
+      bookedSeat = List<String>.from(json['bookedSeats']);
     }
     iV = json['__v'];
   }
@@ -48,7 +48,7 @@ class DetailShowtime {
     }
     data['isShown'] = isShown;
     if (bookedSeat != null) {
-      data['bookedSeat'] = bookedSeat;
+      data['bookedSeats'] = bookedSeat;
     }
     data['__v'] = iV;
     return data;

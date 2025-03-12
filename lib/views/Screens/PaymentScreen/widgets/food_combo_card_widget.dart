@@ -82,7 +82,7 @@ class _FoodComboCardWidgetState extends State<FoodComboCardWidget> {
                       CounterWidget(
                         iconPath: 'assets/icons/minus_icon.svg',
                         defaultColor: 0xffDFDEE4,
-                        changeColor: 0xFF0094FF,
+                        changeColor: 0xFF3461FD,
                         isDisabled: count == 0,
                         onTap: decrease,
                       ),
@@ -104,8 +104,8 @@ class _FoodComboCardWidgetState extends State<FoodComboCardWidget> {
                       ),
                       CounterWidget(
                         iconPath: 'assets/icons/plus_icon.svg',
-                        defaultColor: 0xFF0094FF,
-                        changeColor: 0xFF0094FF,
+                        defaultColor: 0xFF3461FD,
+                        changeColor: 0xFF3461FD,
                         isDisabled: widget.selectedIndex <= 0,
                         onTap: increase,
                       ),

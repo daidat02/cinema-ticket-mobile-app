@@ -29,7 +29,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     final Room? room = widget.detailShowtime?.room;
 
     return Scaffold(
-      backgroundColor: const Color(0xffDFDEE4),
+      backgroundColor: const Color.fromARGB(255, 251, 248, 248),
       appBar: const PageAppBarWidget(title: 'Thông tin thanh toán'),
       body: SingleChildScrollView(
         child: Padding(
@@ -283,7 +283,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   height: 10,
                 ),
                 Container(
-                  height: 70,
+                  height: 60,
                   width: double.infinity,
                   padding: const EdgeInsets.all(10),
                   decoration: const BoxDecoration(
@@ -291,6 +291,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Nguyễn Trần Yến Vy',

@@ -19,7 +19,7 @@ class BtnBottomWidget<T> extends StatelessWidget {
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue, // Màu nền
+            backgroundColor: const Color(0xff3461FD), // Màu nền
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10), // Bo góc
             ),

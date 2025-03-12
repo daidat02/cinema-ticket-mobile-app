@@ -40,7 +40,6 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       setState(() {
         detailShowtime = loadDetailShowtime;
       });
-      print(loadDetailShowtime.room?.seats?.length);
     }
   }
 
@@ -128,7 +127,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                     return GestureDetector(
                       onTap: () {
                         // Logic chọn ghế của bạn
-                        detailShowtime!.bookedSeat!.contains(seat?.sId)
+                        detailShowtime?.bookedSeat?.contains(seat?.sId) ?? false
                             ? null
                             : // Nếu ghế đã đặt, không cho nhấn
                             toggleSeatSelection(seat);
@@ -142,12 +141,11 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                               const BorderRadius.all(Radius.circular(4)),
                           color: selectedSeats.contains(seat)
                               ? const Color(
-                                  0xff2C4FA8) // Ghế đang chọn có màu xanh đậm
+                                  0xff2A4ECA) // Ghế đang chọn có màu xanh đậm
                               : (detailShowtime?.bookedSeat
                                           ?.contains(seat?.sId) ??
                                       false)
-                                  ? const Color(
-                                      0xff0079FF) // Ghế đã đặt có màu xám
+                                  ? const Color(0xff3461FD)
                                   : const Color(0xffD0D1D9), // Màu ghế mặc định
                         ),
                         child: Text(
@@ -183,9 +181,9 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  seatTypeWidget(0xff0079FF, 'Đã đặt'),
+                  seatTypeWidget(0xff3461FD, 'Đã đặt'),
                   seatTypeWidget(0xffD0D1D9, 'Chưa đặt'),
-                  seatTypeWidget(0xff2C4FA8, 'Đang Chọn'),
+                  seatTypeWidget(0xff2A4ECA, 'Đang Chọn'),
                 ],
               ),
             ),
@@ -229,8 +227,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                     height: 5,
                   ),
                   Text(
-                    // '14:20 ~ 15:57 | Thứ 5, 27/2/2025 | 2D Phụ đề',
-                    '${DateFormat('HH:mm').format(detailShowtime?.startTime?.toLocal() ?? DateTime.now())} ~ 15:57 | ${DateFormat('EEEE', 'vi').format(detailShowtime?.startTime?.toLocal() ?? DateTime.now())}, ${DateFormat('dd/MM/yyyy').format(detailShowtime?.startTime?.toLocal() ?? DateTime.now())} | 2D Phụ Đề',
+                    '${DateFormat('HH:mm').format(detailShowtime?.startTime?.toLocal() ?? DateTime.now())} ~ ${DateFormat('HH:mm').format(detailShowtime?.startTime?.toLocal().add(Duration(minutes: detailShowtime?.movie?.duration ?? 0)) ?? DateTime.now())} | ${DateFormat('EEEE', 'vi').format(detailShowtime?.startTime?.toLocal() ?? DateTime.now())}, ${DateFormat('dd/MM/yyyy').format(detailShowtime?.startTime?.toLocal() ?? DateTime.now())} | 2D Phụ Đề',
                     style: const TextStyle(fontSize: 13),
                   ),
                   const SizedBox(
