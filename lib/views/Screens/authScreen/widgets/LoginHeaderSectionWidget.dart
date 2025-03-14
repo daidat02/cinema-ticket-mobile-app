@@ -3,17 +3,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:shop/constants/TextStyle.dart';
 
 class LoginHeaderSectionWidget extends StatelessWidget {
-  const LoginHeaderSectionWidget({
-    super.key,
-  });
+  final String titleHeader;
+  const LoginHeaderSectionWidget({super.key, required this.titleHeader});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
-          Text('Đăng Nhập', style: AppTextStyles.heading),
+          Text(titleHeader, style: AppTextStyles.heading),
           const Text(
             'Chào bạn, sẵn sàng khám phá những điều mới chưa?',
             textAlign: TextAlign.center,

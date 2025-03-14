@@ -269,6 +269,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                       arguments: {
                         'detailShowtime': detailShowtime,
                         'selectedSeats': selectedSeats,
+                        'totalPrice': totalPrice
                       },
                     );
                   }

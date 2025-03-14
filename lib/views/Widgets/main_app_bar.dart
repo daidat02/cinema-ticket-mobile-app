@@ -26,11 +26,15 @@ class _MainAppBarState extends State<MainAppBar> {
               ? ElevatedButton(
                   onPressed: () {
                     // Xử lý chuyển hướng đến trang đăng nhập
+                    Navigator.pushNamed(context, '/login');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Màu nền nút
+                    backgroundColor: const Color(0xff3461FD),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ), // Màu nền nút
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                        horizontal: 20, vertical: 12),
                   ),
                   child: const Text(
                     "Đăng nhập",
@@ -97,9 +101,8 @@ class _MainAppBarState extends State<MainAppBar> {
             child: Align(
               alignment: Alignment.centerRight,
               child: SvgPicture.asset(
-                'assets/logo/logo.svg',
-                width: 51,
-                height: 55,
+                'assets/logo/logo_text.svg',
+                height: 20,
               ),
             ),
           ),

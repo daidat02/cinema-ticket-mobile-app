@@ -48,7 +48,7 @@ class ShowtimeItemWidget extends StatelessWidget {
             child: Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: const Color(0xff0094FF).withOpacity(0.2),
+                color: const Color(0xff3461FD).withOpacity(0.5),
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10),
@@ -56,7 +56,7 @@ class ShowtimeItemWidget extends StatelessWidget {
               ),
               child: const Text(
                 'Còn 127/168',
-                style: TextStyle(fontSize: 12, color: Color(0xff0094FF)),
+                style: TextStyle(fontSize: 12, color: Color(0xff2A4ECA)),
               ),
             ),
           ),

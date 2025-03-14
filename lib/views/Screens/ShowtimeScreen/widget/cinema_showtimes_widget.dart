@@ -38,18 +38,18 @@ class CinemaShowtimesWidget extends StatelessWidget {
             Container(
               height: 50,
               width: 50,
+              padding: const EdgeInsets.all(3),
               alignment: Alignment.center,
               decoration: BoxDecoration(
+                  color: const Color(0xffEEF6FF),
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
                   border: Border.all(
                       width: 1,
                       color: const Color(0xffD3D3D3),
                       style: BorderStyle.solid)),
               child: SvgPicture.asset(
-                'assets/logo/logo2.svg',
-                fit: BoxFit.contain,
-                width: 40,
-                height: 40,
+                'assets/logo/logo_text.svg',
+                height: 30,
               ),
             ),
             const SizedBox(

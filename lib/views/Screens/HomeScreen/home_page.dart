@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/models/MovieModel.dart';
 import 'package:shop/models/User.dart';
+import 'package:shop/providers/authProvider.dart';
 import 'package:shop/services/API/api_moive_services.dart';
 import 'package:shop/services/stores.dart';
 import 'package:shop/views/Screens/HomeScreen/widget/section_header_widget.dart';
 import 'package:shop/views/Screens/HomeScreen/widget/section_title_widget.dart';
 import 'package:shop/views/Widgets/line_widget.dart';
+import 'package:shop/views/Widgets/loading_widget.dart';
 import 'package:shop/views/Widgets/main_app_bar.dart';
 import 'package:shop/views/Widgets/top_movie_card.dart';
 
@@ -40,10 +43,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> loadMovies() async {
-    List<Movie> loadedMovies = await _movieService.loadMoviesApi();
-    setState(() {
-      movies = loadedMovies;
-    });
+    try {
+      LoadingOverlay.show(context);
+      List<Movie> loadedMovies = await _movieService.loadMoviesApi();
+      setState(() {
+        movies = loadedMovies;
+      });
+      // Tạo độ trễ 1 giây trước khi ẩn loading
+      await Future.delayed(const Duration(seconds: 2));
+      LoadingOverlay.hide();
+    } catch (e) {
+      LoadingOverlay.hide();
+    }
   }
 
   @override
@@ -52,7 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
-        child: MainAppBar(user: user),
+        child: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            return MainAppBar(user: authProvider.user);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -100,28 +115,26 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
                   child: sectionTitleWidget('Phim Nổi Bật')),
-              movies.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : SizedBox(
-                      height: 390,
-                      child: FlutterCarousel(
-                        items: movies
-                            .map((movie) => TopMovieCard(movie: movie))
-                            .toList(),
-                        options: CarouselOptions(
-                          height: 460,
-                          viewportFraction: 0.55,
-                          enlargeCenterPage: true,
-                          enableInfiniteScroll: true,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _currentIndex = index;
-                            });
-                          },
-                          showIndicator: false,
-                        ),
-                      ),
-                    ),
+              SizedBox(
+                height: 390,
+                child: FlutterCarousel(
+                  items: movies
+                      .map((movie) => TopMovieCard(movie: movie))
+                      .toList(),
+                  options: CarouselOptions(
+                    height: 460,
+                    viewportFraction: 0.55,
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: true,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    },
+                    showIndicator: false,
+                  ),
+                ),
+              ),
               LineWidget(),
               const SizedBox(height: 10),
 

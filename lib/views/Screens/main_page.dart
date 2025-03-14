@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shop/views/Screens/CinemaScreen/cinema_screen.dart';
 import 'package:shop/views/Screens/DiscountScreen/discount_screen.dart';
 import 'package:shop/views/Screens/HomeScreen/home_page.dart';
-import 'package:shop/views/Screens/MovieScreen/detail_movie.dart';
 import 'package:shop/views/Screens/ProfileScreen/profile_screen.dart';
 import 'package:shop/views/Screens/authScreen/login_Screen.dart';
+import 'package:shop/views/Screens/authScreen/register_screen.dart';
 import 'package:shop/views/Widgets/bottom_nav_widget.dart';
 
 class MainPage extends StatefulWidget {
@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
     const MyHomePage(),
     const CinemaScreen(),
     const LoginScreen(),
-    const ProfileScreen()
+    const RegisterScreen()
   ];
 
   void onItemTapped(int index) {

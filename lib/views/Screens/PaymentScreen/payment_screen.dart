@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -6,28 +9,82 @@ import 'package:shop/models/DetailShowtime.dart';
 import 'package:shop/models/MovieModel.dart';
 import 'package:shop/models/RoomModel.dart';
 import 'package:shop/models/SeatModel.dart';
+import 'package:shop/models/User.dart';
+import 'package:shop/services/API/api_payment_service.dart';
+import 'package:shop/services/stores.dart';
 import 'package:shop/views/Screens/PaymentScreen/widgets/food_combo_card_widget.dart';
 import 'package:shop/views/Widgets/btn_bottom_widget.dart';
+import 'package:shop/views/Widgets/loading_widget.dart';
 import 'package:shop/views/Widgets/page_appBar_widget.dart';
 import 'package:shop/views/Widgets/postter_widget.dart';
+import 'package:shop/views/Widgets/toast_widget.dart';
 
 class PaymentScreen extends StatefulWidget {
   final DetailShowtime? detailShowtime;
   final List<Seat>? selectedSeats;
-  const PaymentScreen({super.key, this.detailShowtime, this.selectedSeats});
+  final double? totalPriceTicket;
+  const PaymentScreen(
+      {super.key,
+      this.detailShowtime,
+      this.selectedSeats,
+      this.totalPriceTicket});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  late Movie? movie;
+  late Cinema? cinema;
+  late Room? room;
+  User? user;
+  String? accessToken;
+  final PaymentService = ApiPaymentService();
   int selectedIndex = 0;
   @override
-  Widget build(BuildContext context) {
-    final Movie? movie = widget.detailShowtime?.movie;
-    final Cinema? cinema = widget.detailShowtime?.cinema;
-    final Room? room = widget.detailShowtime?.room;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      movie = widget.detailShowtime!.movie;
+      cinema = widget.detailShowtime!.cinema;
+      room = widget.detailShowtime!.room;
+    });
+    _loadUser();
+  }
 
+  Future<void> _loadUser() async {
+    User? fetchedUser = await Storage.getUser();
+    String? fetchAccessToken = await Storage.getAccessToken();
+    setState(() {
+      user = fetchedUser;
+      accessToken = fetchAccessToken;
+    });
+    print(user?.sId ?? '');
+  }
+
+  void _bookticket(String data) async {
+    final bookData = {
+      'showtimeId': widget.detailShowtime?.sId,
+      'seats': widget.selectedSeats
+    };
+    try {
+      LoadingOverlay.show(context);
+      await Future.delayed(const Duration(seconds: 2));
+      final response = await PaymentService.bookTicket(bookData, accessToken);
+      Navigator.pushNamed(context, '/payment_success',
+          arguments: response['ticket']['_id']);
+      SuccessToastWidget.show(context, response['message']);
+      LoadingOverlay.hide();
+    } catch (e) {
+      LoadingOverlay.hide();
+      SuccessToastWidget.show(
+          context, e.toString().replaceFirst('Exception: ', ''));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 251, 248, 248),
       appBar: const PageAppBarWidget(title: 'Thông tin thanh toán'),
@@ -289,18 +346,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Nguyễn Trần Yến Vy',
-                        style: TextStyle(
+                        user?.name ?? '',
+                        style: const TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '09839123123 - ntyv2321@gmail.com',
-                        style: TextStyle(
+                        '${user?.phoneNumber ?? ''} - ${user?.email ?? ''}',
+                        style: const TextStyle(
                             fontSize: 12,
                             color: Color.fromARGB(255, 122, 122, 122)),
                       )
@@ -316,16 +373,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Tổng Tiền'),
+                  const Text('Tổng Tiền'),
                   Text(
-                    '200.000đ',
-                    // '${NumberFormat.decimalPattern().format(totalPrice)}đ',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    '${NumberFormat.decimalPattern().format(widget.totalPriceTicket) ?? 0}đ',
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
                   )
                 ],
               ),
@@ -333,7 +390,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             BtnBottomWidget(
                 title: 'Thanh Toán',
                 data: 'Thanh toán',
-                onPressed: (String data) => {print(data)})
+                onPressed: (String data) => _bookticket(data))
           ],
         ),
       ),

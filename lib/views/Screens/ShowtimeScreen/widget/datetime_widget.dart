@@ -59,7 +59,7 @@ class _DatetimeState extends State<DatetimeWidget> {
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected
-                        ? const Color(0xff0094FF)
+                        ? const Color(0xff3461FD)
                         : const Color(0xffE5E5E5),
                     width: 1,
                   ),
@@ -74,7 +74,7 @@ class _DatetimeState extends State<DatetimeWidget> {
                           weekDay,
                           style: TextStyle(
                               color: isSelected
-                                  ? const Color(0xff0094FF)
+                                  ? const Color(0xff3461FD)
                                   : const Color(0xff000000),
                               fontSize: 10,
                               fontWeight: FontWeight.w500),
@@ -90,7 +90,7 @@ class _DatetimeState extends State<DatetimeWidget> {
                           bottomRight: Radius.circular(8),
                         ),
                         color: isSelected
-                            ? const Color(0xff0094FF)
+                            ? const Color(0xff3461FD)
                             : const Color(0xffE5E5E5),
                       ),
                       alignment: Alignment

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/constants/TextStyle.dart';
+import 'package:shop/models/User.dart';
+import 'package:shop/providers/authProvider.dart';
 import 'package:shop/services/API/api_auth_service.dart';
 import 'package:shop/views/Screens/authScreen/widgets/LoginHeaderSectionWidget.dart';
 import 'package:shop/views/Screens/authScreen/widgets/ReusableTextFormField.dart';
+import 'package:shop/views/Screens/authScreen/widgets/auth_promt_widget.dart';
+import 'package:shop/views/Widgets/loading_widget.dart';
 import 'package:shop/views/Widgets/toast_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,12 +35,26 @@ class _LoginScreenState extends State<LoginScreen> {
         "phoneNumber": email,
         "password": password,
       };
+
       try {
+        LoadingOverlay.show(context);
         final response = await authService.login(userData);
-        ToastWidget.show(context, response['message']);
+        User user = User.fromJson(response['user']);
+        String accessToken = response['accessToken'];
+        String refreshToken = response['refreshToken'];
+
+        // Cập nhật AuthProvider
+        Provider.of<AuthProvider>(context, listen: false)
+            .setUser(user, accessToken, refreshToken);
+        await Future.delayed(const Duration(seconds: 1));
+        Navigator.pushNamed(context, '/');
+        SuccessToastWidget.show(context, response['message']);
+        LoadingOverlay.hide();
       } catch (e) {
         print(e);
-        ToastWidget.show(context, e.toString().replaceFirst('Exception: ', ''));
+        LoadingOverlay.hide();
+        SuccessToastWidget.show(
+            context, e.toString().replaceFirst('Exception: ', ''));
       }
     }
   }
@@ -43,6 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset:
+          true, // Tự động điều chỉnh kích thước khi bàn phím mở
+
       backgroundColor: Colors.white,
       body: Container(
         width: double.infinity,
@@ -51,7 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const LoginHeaderSectionWidget(),
+            const LoginHeaderSectionWidget(
+              titleHeader: 'Đăng Nhập',
+            ),
             const SizedBox(
               height: 30,
             ),
@@ -114,39 +138,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const NewWidget()
+                  AuthPromtWidget(
+                    text1: 'Bạn Chưa Có Tài Khoản? ',
+                    text2: 'Đăng ký',
+                    onTap: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                  )
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class NewWidget extends StatelessWidget {
-  const NewWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: RichText(
-        textAlign: TextAlign.left,
-        text: const TextSpan(
-            style: TextStyle(
-              fontSize: 12,
-              color: Color(0xff3B4054),
-            ),
-            text: 'Bạn Chưa có tài Khoản? ',
-            children: [
-              TextSpan(
-                  text: 'Đăng Ký',
-                  style: TextStyle(color: Color(0xff3461FD), fontSize: 14))
-            ]),
       ),
     );
   }

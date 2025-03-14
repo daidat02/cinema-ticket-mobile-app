@@ -1,7 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
-class ToastWidget {
+class SuccessToastWidget {
   static void show(BuildContext context, String message) {
     Flushbar(
       margin: const EdgeInsets.all(8),
@@ -19,7 +19,7 @@ class ToastWidget {
       icon: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 15),
         child: Icon(
-          Icons.info_outline,
+          Icons.check_circle,
           size: 32.0,
           color: Colors.white,
         ),

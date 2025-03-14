@@ -4,9 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop/models/User.dart';
 
 class Storage {
-  static Future<void> savedUser(accessToken, Map<String, dynamic> user) async {
+  static Future<void> savedUser(
+      accessToken, refreshToken, Map<String, dynamic> user) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('accessToken', accessToken);
+    await prefs.setString('refreshToken', refreshToken);
+
     await prefs.setString('user', jsonEncode(user));
   }
 
