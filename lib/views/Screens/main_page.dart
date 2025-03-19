@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shop/views/Screens/CinemaScreen/cinema_screen.dart';
-import 'package:shop/views/Screens/DiscountScreen/discount_screen.dart';
 import 'package:shop/views/Screens/HomeScreen/home_page.dart';
 import 'package:shop/views/Screens/ProfileScreen/profile_screen.dart';
 import 'package:shop/views/Screens/authScreen/login_Screen.dart';
 import 'package:shop/views/Screens/authScreen/register_screen.dart';
-import 'package:shop/views/Widgets/bottom_nav_widget.dart';
+import 'package:shop/views/Widgets/bottom_navbar_widget.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -21,7 +20,7 @@ class _MainPageState extends State<MainPage> {
     const MyHomePage(),
     const CinemaScreen(),
     const LoginScreen(),
-    const RegisterScreen()
+    const ProfileScreen()
   ];
 
   void onItemTapped(int index) {
@@ -33,11 +32,29 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: _screens,
-        ),
-        bottomNavigationBar: CustomBottomNavBar(
-            selectedIndex: _selectedIndex, onItemTapped: onItemTapped));
+      body: Stack(
+        children: [
+          // Hiển thị các màn hình theo _selectedIndex
+          Stack(
+            children: List.generate(_screens.length, (index) {
+              return Offstage(
+                offstage: _selectedIndex != index,
+                child: _screens[index],
+              );
+            }),
+          ),
+          // Navbar ở phía dưới
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: -5, // Khoảng cách từ bottom
+            child: BottomNavBarWidget(
+              selectedIndex: _selectedIndex,
+              onItemTapped: onItemTapped,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

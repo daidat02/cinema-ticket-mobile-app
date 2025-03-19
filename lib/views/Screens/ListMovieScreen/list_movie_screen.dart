@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:shop/models/MovieModel.dart';
 import 'package:shop/services/API/api_moive_services.dart';
 
 class ListMovieScreen extends StatefulWidget {
-  const ListMovieScreen({super.key});
+  const ListMovieScreen({
+    super.key,
+  });
 
   @override
   State<ListMovieScreen> createState() => _MyWidgetState();
@@ -17,6 +21,14 @@ class _MyWidgetState extends State<ListMovieScreen> {
     // TODO: implement initState
     super.initState();
     loadMovies();
+  }
+
+  int selectedIndex = 0;
+  void onItemTapped(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+    print(index);
   }
 
   Future<void> loadMovies() async {

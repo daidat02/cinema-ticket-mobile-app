@@ -163,14 +163,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     Container(
                                       width: 35,
                                       height: 35,
+                                      padding: const EdgeInsets.all(2),
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
+                                          color: const Color(0xffF5F9FE),
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(3)),
                                           border: Border.all(
                                               color: const Color(0xffD3D3D3))),
                                       child: SvgPicture.asset(
-                                          'assets/logo/logo2.svg'),
+                                          'assets/logo/logo_text.svg'),
                                     ),
                                     const SizedBox(
                                       width: 6,

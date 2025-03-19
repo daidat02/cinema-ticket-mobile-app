@@ -70,9 +70,16 @@ class _LoginScreenState extends State<LoginScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(15),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 50),
+              child: SvgPicture.asset(
+                'assets/logo/logo_text.svg',
+                height: 50,
+              ),
+            ),
             const LoginHeaderSectionWidget(
               titleHeader: 'Đăng Nhập',
             ),

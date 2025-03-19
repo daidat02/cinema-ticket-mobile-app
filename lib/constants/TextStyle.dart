@@ -20,7 +20,7 @@ class AppTextStyles {
   );
   static const TextStyle caption = TextStyle(
       fontFamily: 'Roboto',
-      fontSize: 12,
-      fontWeight: FontWeight.w300,
-      color: AppColors.gray);
+      fontSize: 13,
+      fontWeight: FontWeight.w400,
+      color: Color(0xff162651));
 }

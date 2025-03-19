@@ -5,6 +5,7 @@ import 'package:shop/models/SeatModel.dart';
 import 'package:shop/services/API/api_showtimes_service.dart';
 import 'package:shop/views/Widgets/btn_bottom_widget.dart';
 import 'package:shop/views/Widgets/line_widget.dart';
+import 'package:shop/views/Widgets/loading_widget.dart';
 import 'package:shop/views/Widgets/page_appBar_widget.dart';
 
 class SeatSelectionScreen extends StatefulWidget {
@@ -33,6 +34,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   }
 
   Future<void> loadDetailShowtime(showtimeId) async {
+    LoadingOverlay.show(context);
     DetailShowtime loadDetailShowtime =
         await _showtimesService.loadDetailShowtime(showtimeId);
 
@@ -41,6 +43,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
         detailShowtime = loadDetailShowtime;
       });
     }
+    LoadingOverlay.hide();
   }
 
   @override

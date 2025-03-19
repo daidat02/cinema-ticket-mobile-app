@@ -7,8 +7,8 @@ class Cinema {
   Cinema({
     required this.id,
     required this.name,
-    required this.address,
-    required this.imageUrl,
+    this.address,
+    this.imageUrl,
   });
 
   factory Cinema.fromJson(Map<String, dynamic> json) {

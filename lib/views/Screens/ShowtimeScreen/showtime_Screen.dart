@@ -6,6 +6,7 @@ import 'package:shop/models/MovieModel.dart';
 import 'package:shop/services/API/api_showtimes_service.dart';
 import 'package:shop/views/Screens/ShowtimeScreen/widget/cinema_showtimes_widget.dart';
 import 'package:shop/views/Screens/ShowtimeScreen/widget/datetime_widget.dart';
+import 'package:shop/views/Widgets/loading_widget.dart';
 import 'package:shop/views/Widgets/page_appBar_widget.dart';
 import 'package:shop/views/Widgets/postter_widget.dart';
 
@@ -24,11 +25,19 @@ class _ShowtimeScreenState extends State<ShowtimeScreen> {
   int selectedIndex = 0; // Biến lưu trạng thái ngày được chọn
   DateTime selectedDate = DateTime.now(); // Biến lưu ngày đã chọn
   List<CinemaShowtimes> cinemaShowtimes = [];
+  final TransformationController _transformationController =
+      TransformationController();
 
   @override
   void initState() {
     super.initState();
     loadShowtimes(widget.movie.sId, selectedDate);
+  }
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
   }
 
   void handleDateSelected(DateTime date) {
@@ -44,6 +53,7 @@ class _ShowtimeScreenState extends State<ShowtimeScreen> {
   }
 
   Future<void> loadShowtimes(movieId, date) async {
+    LoadingOverlay.show(context);
     List<CinemaShowtimes> loadedShowtimes =
         await _showtimesService.loadCinemaShowtimes(movieId, date);
     if (mounted) {
@@ -51,6 +61,7 @@ class _ShowtimeScreenState extends State<ShowtimeScreen> {
         cinemaShowtimes = loadedShowtimes;
       });
     }
+    LoadingOverlay.hide();
   }
 
   @override
