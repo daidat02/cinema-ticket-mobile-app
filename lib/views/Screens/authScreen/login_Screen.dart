@@ -44,8 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
         String refreshToken = response['refreshToken'];
 
         // Cập nhật AuthProvider
-        Provider.of<AuthProvider>(context, listen: false)
-            .setUser(user, accessToken, refreshToken);
+        Provider.of<AuthProvider>(context, listen: false).setUser(user);
         await Future.delayed(const Duration(seconds: 1));
         Navigator.pushNamed(context, '/');
         SuccessToastWidget.show(context, response['message']);

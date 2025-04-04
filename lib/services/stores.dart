@@ -9,7 +9,6 @@ class Storage {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('accessToken', accessToken);
     await prefs.setString('refreshToken', refreshToken);
-
     await prefs.setString('user', jsonEncode(user));
   }
 
@@ -26,6 +25,12 @@ class Storage {
       return User.fromJson(jsonData);
     }
     return null;
+  }
+
+  static Future<bool> isMovieFavorite(String movieId) async {
+    final user = await getUser();
+
+    return user?.moviesFavourite?.contains(movieId) ?? false;
   }
 
   static Future<void> clearUser() async {

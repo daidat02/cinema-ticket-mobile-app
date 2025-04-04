@@ -9,6 +9,7 @@ import 'package:shop/services/API/api_ticket_service.dart';
 import 'package:shop/services/stores.dart';
 import 'package:shop/views/Screens/HomeScreen/widget/section_header_widget.dart';
 import 'package:shop/views/Screens/ProfileScreen/menu_screen.dart';
+import 'package:shop/views/Widgets/card_ticket_widget.dart';
 import 'package:shop/views/Widgets/line_widget.dart';
 import 'package:shop/views/Widgets/loading_widget.dart';
 import 'package:shop/views/Widgets/postter_widget.dart';
@@ -59,6 +60,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  void _showMenuSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.4,
+        minChildSize: 0.2,
+        maxChildSize: 0.8,
+        builder: (_, controller) => Container(
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+          child: ListView(
+            controller: controller,
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+              ),
+              // Thêm các menu item ở đây
+              _buildMenuItem(Icons.person, 'Thông tin cá nhân'),
+              _buildMenuItem(Icons.history, 'Lịch sử giao dịch'),
+              _buildMenuItem(Icons.help, 'Trợ giúp'),
+              _buildMenuItem(Icons.logout, 'Đăng xuất', isLogout: true),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleLogout() async {
+    try {
+      await Storage.clearUser();
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/login',
+        (route) => false,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Đăng xuất thất bại: $e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
               icon: const Icon(Icons.menu), // Icon menu
-              onPressed: () => {}),
+              onPressed: _showMenuSheet),
         ],
       ),
       body: SingleChildScrollView(
@@ -149,7 +205,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 20,
               ),
-              sectionHeader('Vé Chưa Sử Dụng', 'Xem tất Cả', 0xFF3461FD),
+              sectionHeader('Vé Chưa Sử Dụng', 'Xem tất Cả', 0xFF3461FD,
+                  '/list-ticket', true),
               Container(
                   child: tickets.isNotEmpty
                       ? TicketCardWidget(ticket: tickets.first)
@@ -164,112 +221,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-}
 
-class TicketCardWidget extends StatelessWidget {
-  const TicketCardWidget({
-    super.key,
-    required this.ticket,
-  });
-
-  final Ticket ticket;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 150,
-              child: PosterWidget(
-                imageUrl: ticket.showtime?.movie?.imageUrl ?? 'N/A',
-              ),
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    ticket.showtime?.movie?.title ?? '',
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'Thứ 6, 02/07 | 8:30 ~ 10:00 | 2D Lồng Tiếng',
-                    style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: Color.fromARGB(255, 0, 0, 0)),
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    children: [
-                      Container(
-                        width: 35,
-                        height: 35,
-                        padding: const EdgeInsets.all(2),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffF5F9FE),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
-                          border: Border.all(color: const Color(0xffD3D3D3)),
-                        ),
-                        child: SvgPicture.asset('assets/logo/logo_text.svg'),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        ticket.showtime?.cinema?.name ?? '',
-                        style: const TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 133, 132, 132)),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Số Ghế: ${ticket.seats?.map((seat) => seat.seatNumber).join(' ') ?? 'N/A'}',
-                    style: const TextStyle(
-                        fontSize: 12,
-                        color: Color.fromARGB(255, 133, 132, 132)),
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Phòng: ${ticket.showtime?.room?.name ?? ''}',
-                        style: const TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 133, 132, 132)),
-                      ),
-                      SizedBox(
-                        height: 25,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff3461FD),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                          ),
-                          onPressed: () => {print(ticket.sId)},
-                          child: const Text('Sử Dụng',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 10)),
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                ],
-              ),
-            )
-          ],
-        ));
+  Widget _buildMenuItem(IconData icon, String title, {bool isLogout = false}) {
+    return ListTile(
+      leading: Icon(icon, color: isLogout ? Colors.red : null),
+      title: Text(title, style: TextStyle(color: isLogout ? Colors.red : null)),
+      onTap: () {
+        Navigator.pop(context);
+        if (isLogout) {
+          // Xử lý đăng xuất
+          _handleLogout();
+        }
+      },
+    );
   }
 }
 

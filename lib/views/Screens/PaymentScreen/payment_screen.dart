@@ -66,15 +66,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void _bookticket(String data) async {
     final bookData = {
       'showtimeId': widget.detailShowtime?.sId,
-      'seats': widget.selectedSeats
+      'seats': widget.selectedSeats?.map((seat) => seat.sId.toString()).toList()
     };
     try {
       LoadingOverlay.show(context);
       await Future.delayed(const Duration(seconds: 2));
       final response = await PaymentService.bookTicket(bookData, accessToken);
-      Navigator.pushNamed(context, '/payment_success',
-          arguments: response['ticket']['_id']);
-      SuccessToastWidget.show(context, response['message']);
+
+      final vnpResponse = await PaymentService.createVnPayUrl(
+          response['ticket']['id'], accessToken);
+
+      Navigator.pushNamed(context, '/vnp-payment',
+          arguments: vnpResponse['data']);
+      // SuccessToastWidget.show(context, response['message']);
       LoadingOverlay.hide();
     } catch (e) {
       LoadingOverlay.hide();
@@ -267,7 +271,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 fontSize: 14, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            // '14:20 ~ 15:57 | Thứ 5, 27/2/2025 | 2D Phụ đề',
                             '${DateFormat('EEEE', 'vi').format(widget.detailShowtime?.startTime?.toLocal() ?? DateTime.now())}, ${DateFormat('dd/MM/yyyy').format(widget.detailShowtime?.startTime?.toLocal() ?? DateTime.now())}',
                             style: const TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.bold),

@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop/models/User.dart';
 import 'package:shop/providers/authProvider.dart';
+import 'package:shop/providers/movieProvider.dart';
 import 'package:shop/routes/routes.dart';
+import 'package:shop/services/API/api_moive_services.dart';
 import 'package:shop/views/Screens/main_page.dart';
 
 Future main() async {
@@ -27,7 +29,14 @@ Future main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>(
-          create: (_) => AuthProvider(user: user, accessToken: token),
+          create: (_) => AuthProvider(user: user),
+        ),
+        ChangeNotifierProvider<MovieProvider>(
+          create: (context) => MovieProvider(
+            movieService: MovieService(), // Khởi tạo MovieService
+            authProvider: Provider.of<AuthProvider>(context, listen: false),
+            favoriteMovieIds: user?.moviesFavourite,
+          ),
         ),
       ],
       child: const MyApp(),

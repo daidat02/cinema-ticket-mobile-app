@@ -5,7 +5,8 @@ import 'package:shop/models/TicketModel.dart';
 
 class ApiTicketService {
   Future<List<Ticket>> getTicketsByUserId(String accessToken) async {
-    final url = Uri.parse('http://10.0.2.2:3000/api/ticket/ticket/');
+    final url = Uri.parse(
+        'https://mbooking-server-production.up.railway.app/api/ticket/ticket/');
 
     try {
       final response = await http.get(

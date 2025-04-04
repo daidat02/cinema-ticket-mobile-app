@@ -18,7 +18,7 @@ class TopMovieCard extends StatelessWidget {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
+        margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Colors.white,

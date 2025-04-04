@@ -1,31 +1,39 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop/models/User.dart';
 
 class AuthProvider extends ChangeNotifier {
   User? _user;
-  String? _accessToken;
-  String? _refreshToken;
 
-  AuthProvider({User? user, String? accessToken}) {
+  AuthProvider({User? user}) {
     _user = user;
-    _accessToken = accessToken;
   }
+
   User? get user => _user;
-  String? get accessToken => _accessToken;
-  String? get refreshToken => _refreshToken;
 
   // Cập nhật thông tin người dùng và token sau khi đăng nhập thành công
-  void setUser(User user, String accessToken, String refreshToken) {
+  void setUser(User user) {
     _user = user;
-    _accessToken = accessToken;
-    _refreshToken = refreshToken;
     notifyListeners(); // Thông báo cho các widget lắng nghe để rebuild UI
+  }
+
+  void updateFavoriteMovies(List<String> newFavorites) {
+    if (_user != null) {
+      _user = _user!.copyWith(moviesFavourite: newFavorites);
+      _saveUserToStorage();
+      notifyListeners();
+    }
+  }
+
+  Future<void> _saveUserToStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user', jsonEncode(_user?.toJson()));
   }
 
   void logout() {
     _user = null;
-    _accessToken = null;
-    _refreshToken = null;
     notifyListeners();
   }
 }

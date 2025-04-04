@@ -70,7 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 60),
           padding: const EdgeInsets.all(0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,13 +79,15 @@ class _MyHomePageState extends State<MyHomePage> {
               // Search
               Container(
                 height: 45,
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
+                  color: const Color(0xffFAFAFA),
+                  borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SvgPicture.asset(
                       'assets/icons/search_icon.svg',
@@ -92,16 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 20,
                       allowDrawingOutsideViewBox: true, // Fix lỗi filter
                     ),
-                    const SizedBox(width: 10),
-                    const Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Tìm kiếm phim',
-                          hintStyle: TextStyle(fontSize: 14),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
+                    const SizedBox(width: 5),
+                    const Text(
+                      'Tìm Kiếm ...',
+                    )
                   ],
                 ),
               ),
@@ -116,14 +113,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   margin: const EdgeInsets.symmetric(horizontal: 10),
                   child: sectionTitleWidget('Phim Nổi Bật')),
               SizedBox(
-                height: 390,
+                height: 410,
                 child: FlutterCarousel(
                   items: movies
                       .map((movie) => TopMovieCard(movie: movie))
                       .toList(),
                   options: CarouselOptions(
-                    height: 460,
-                    viewportFraction: 0.55,
+                    height: 500,
+                    viewportFraction: 0.6,
                     enlargeCenterPage: true,
                     enableInfiniteScroll: true,
                     onPageChanged: (index, reason) {
@@ -138,7 +135,8 @@ class _MyHomePageState extends State<MyHomePage> {
               LineWidget(),
               const SizedBox(height: 10),
 
-              sectionHeader('Phim Đang Chiếu', 'Xem tất cả', 0xFF007AFF),
+              sectionHeader('Phim Đang Chiếu', 'Xem tất cả', 0xFF007AFF,
+                  '/list_movie', true),
               SizedBox(
                 height: 340, // Đặt chiều cao rõ ràng cho danh sách phim
                 child: ListView.builder(
@@ -158,7 +156,8 @@ class _MyHomePageState extends State<MyHomePage> {
               LineWidget(),
               const SizedBox(height: 10),
 
-              sectionHeader('Phim Sắp Chiếu', 'Xem tất cả', 0xFF007AFF),
+              sectionHeader('Phim Sắp Chiếu', 'Xem tất cả', 0xFF007AFF,
+                  '/list_movie', false),
 
               SizedBox(
                 height: 340, // Đặt chiều cao rõ ràng cho danh sách phim

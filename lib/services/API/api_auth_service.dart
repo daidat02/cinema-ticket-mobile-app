@@ -7,7 +7,8 @@ import 'package:shop/services/stores.dart';
 class ApiAuthService {
   Future<Map<String, dynamic>> register(
       Map<String, dynamic> registerData) async {
-    final url = Uri.parse('http://10.0.2.2:3000/api/auth/register');
+    final url = Uri.parse(
+        'https://mbooking-server-production.up.railway.app/api/auth/register');
     try {
       final response = await http.post(url,
           headers: {
@@ -29,7 +30,8 @@ class ApiAuthService {
   }
 
   Future<Map<String, dynamic>> login(Map<String, dynamic> userData) async {
-    final url = Uri.parse('http://10.0.2.2:3000/api/auth/login');
+    final url = Uri.parse(
+        'https://mbooking-server-production.up.railway.app/api/auth/login');
     try {
       final response = await http.post(url,
           headers: {
@@ -39,7 +41,6 @@ class ApiAuthService {
       final data = jsonDecode(response.body);
       if (data['code'] == 200) {
         // Đăng nhập thành công
-        print(data['accessToken']);
         await Storage.savedUser(
             data['accessToken'], data['refreshToken'], data['user']);
 

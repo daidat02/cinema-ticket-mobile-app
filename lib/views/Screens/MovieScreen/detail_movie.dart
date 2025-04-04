@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shop/models/MovieModel.dart';
+import 'package:shop/providers/movieProvider.dart';
+import 'package:shop/services/API/api_moive_services.dart';
+import 'package:shop/services/stores.dart';
 import 'package:shop/views/Widgets/btn_bottom_widget.dart';
 import 'package:shop/views/Widgets/line_widget.dart';
+import 'package:shop/views/Widgets/loading_widget.dart';
 import 'package:shop/views/Widgets/page_appBar_widget.dart';
 import 'package:shop/views/Widgets/postter_widget.dart';
+import 'package:shop/views/Widgets/toast_widget.dart';
 
 class DetailMovie extends StatefulWidget {
   final Movie movie;
@@ -17,8 +23,28 @@ class DetailMovie extends StatefulWidget {
 }
 
 class _DetailMovieState extends State<DetailMovie> {
+  final MovieService _movieService = MovieService();
+
+  bool isFavorite = false;
+  @override
+  void initState() {
+    super.initState();
+    _checkFavoriteStatus();
+  }
+
+  Future<void> _checkFavoriteStatus() async {
+    final movieProvider = Provider.of<MovieProvider>(context, listen: false);
+    final isFav = await movieProvider.isMovieFavorite(widget.movie.sId ?? '');
+    print(isFav);
+    setState(() {
+      isFavorite = isFav;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final movieProvider = Provider.of<MovieProvider>(context, listen: false);
+
     DateTime? releaseDate = widget.movie.releaseDate;
     String formattedDate = releaseDate != null
         ? DateFormat('dd/MM/yyyy').format(releaseDate)
@@ -50,6 +76,8 @@ class _DetailMovieState extends State<DetailMovie> {
                             widget.movie.title ?? 'Chưa có tiêu đề',
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 5),
                           Text(
@@ -57,6 +85,8 @@ class _DetailMovieState extends State<DetailMovie> {
                                 'Chưa phân loại', // Sửa genres thành genre
                             style: const TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.normal),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 5),
                           Row(
@@ -93,7 +123,9 @@ class _DetailMovieState extends State<DetailMovie> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              ActionButtonWidget('Yêu thích', 'heart_icon.svg'),
+                              FavoriteButtonWidget(
+                                movieId: widget.movie.sId ?? '',
+                              ),
                               ActionButtonWidget('Trailer', 'play_icon.svg'),
                             ],
                           )
@@ -238,12 +270,19 @@ class _DetailMovieState extends State<DetailMovie> {
   }
 
   Widget ActionButtonWidget(String title, String pathName) {
+    // Xác định có phải nút yêu thích không
+    final isHeartButton = pathName == 'heart_icon.svg';
+
+    // Màu icon: đỏ nếu là yêu thích, màu mặc định nếu không
+    final color = isHeartButton && isFavorite
+        ? Colors.red
+        : const Color.fromARGB(255, 110, 109, 109);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(6)),
-        border: Border.all(
-            color: const Color.fromARGB(255, 110, 109, 109), width: 0.5),
+        border: Border.all(color: color, width: 0.5),
       ),
       child: Row(
         children: [
@@ -251,12 +290,13 @@ class _DetailMovieState extends State<DetailMovie> {
             'assets/icons/$pathName',
             height: 18,
             width: 18,
+            color: color,
           ),
           const SizedBox(width: 5),
           Text(
             title,
-            style: const TextStyle(
-                fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),
+            style: TextStyle(
+                fontSize: 13, fontWeight: FontWeight.bold, color: color),
           ),
         ],
       ),
@@ -277,5 +317,96 @@ class SectionHeaderWidget extends StatelessWidget {
       title,
       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     );
+  }
+}
+
+class FavoriteButtonWidget extends StatefulWidget {
+  final String movieId;
+
+  const FavoriteButtonWidget({
+    super.key,
+    required this.movieId,
+  });
+
+  @override
+  _FavoriteButtonWidgetState createState() => _FavoriteButtonWidgetState();
+}
+
+class _FavoriteButtonWidgetState extends State<FavoriteButtonWidget> {
+  bool _isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFavoriteStatus();
+  }
+
+  Future<void> _checkFavoriteStatus() async {
+    final movieProvider = Provider.of<MovieProvider>(context, listen: false);
+    final isFav = await movieProvider.isMovieFavorite(widget.movieId ?? '');
+    setState(() {
+      _isFavorite = isFav;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _toggleFavorite,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+          border: Border.all(
+            color: _isFavorite
+                ? Colors.red
+                : const Color.fromARGB(255, 110, 109, 109),
+            width: 0.5,
+          ),
+        ),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              'assets/icons/heart_icon.svg',
+              height: 18,
+              width: 18,
+              color: _isFavorite
+                  ? Colors.red
+                  : const Color.fromARGB(255, 110, 109, 109),
+            ),
+            const SizedBox(width: 5),
+            Text(
+              'Yêu thích',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: _isFavorite
+                    ? Colors.red
+                    : const Color.fromARGB(255, 110, 109, 109),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _toggleFavorite() async {
+    final movieProvider = Provider.of<MovieProvider>(context, listen: false);
+    try {
+      LoadingOverlay.show(context);
+      final message = await movieProvider.toggleFavorite(widget.movieId ?? '');
+      SuccessToastWidget.show(context, message);
+      setState(() {
+        _isFavorite = !_isFavorite;
+      });
+      LoadingOverlay.hide();
+    } catch (e) {
+      LoadingOverlay.hide();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi: ${e.toString()}')),
+      );
+    }
   }
 }
