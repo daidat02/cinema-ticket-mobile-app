@@ -48,7 +48,7 @@ class _MainPageState extends State<MainPage> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: -5, // Khoảng cách từ bottom
+            bottom: 0, // Khoảng cách từ bottom
             child: BottomNavBarWidget(
               selectedIndex: _selectedIndex,
               onItemTapped: onItemTapped,

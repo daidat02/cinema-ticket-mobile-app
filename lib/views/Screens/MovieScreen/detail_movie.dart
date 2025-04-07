@@ -395,12 +395,12 @@ class _FavoriteButtonWidgetState extends State<FavoriteButtonWidget> {
     final movieProvider = Provider.of<MovieProvider>(context, listen: false);
     try {
       LoadingOverlay.show(context);
-      final message = await movieProvider.toggleFavorite(widget.movieId ?? '');
-      SuccessToastWidget.show(context, message);
       setState(() {
         _isFavorite = !_isFavorite;
       });
+      final message = await movieProvider.toggleFavorite(widget.movieId ?? '');
       LoadingOverlay.hide();
+      SuccessToastWidget.show(context, message);
     } catch (e) {
       LoadingOverlay.hide();
 

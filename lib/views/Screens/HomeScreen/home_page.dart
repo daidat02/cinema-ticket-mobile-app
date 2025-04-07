@@ -12,6 +12,7 @@ import 'package:shop/views/Screens/HomeScreen/widget/section_title_widget.dart';
 import 'package:shop/views/Widgets/line_widget.dart';
 import 'package:shop/views/Widgets/loading_widget.dart';
 import 'package:shop/views/Widgets/main_app_bar.dart';
+import 'package:shop/views/Widgets/search_widget.dart';
 import 'package:shop/views/Widgets/top_movie_card.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -77,31 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Search
-              Container(
-                height: 45,
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color(0xffFAFAFA),
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/search_icon.svg',
-                      width: 20,
-                      height: 20,
-                      allowDrawingOutsideViewBox: true, // Fix lỗi filter
-                    ),
-                    const SizedBox(width: 5),
-                    const Text(
-                      'Tìm Kiếm ...',
-                    )
-                  ],
-                ),
-              ),
+              const SearchWidget(),
               const SizedBox(height: 10),
               Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),

@@ -54,9 +54,9 @@ class ShowtimeItemWidget extends StatelessWidget {
                   bottomRight: Radius.circular(10),
                 ),
               ),
-              child: const Text(
-                'Còn 127/168',
-                style: TextStyle(fontSize: 12, color: Color(0xff2A4ECA)),
+              child: Text(
+                'Còn ${showtime.availableSeats}/${showtime.seatNumbers}',
+                style: const TextStyle(fontSize: 12, color: Color(0xff2A4ECA)),
               ),
             ),
           ),

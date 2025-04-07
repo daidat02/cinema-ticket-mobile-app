@@ -39,7 +39,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       };
       try {
         LoadingOverlay.show(context);
-        await Future.delayed(const Duration(seconds: 2));
         final response = await authService.register(registerData);
         Navigator.pushNamed(context, '/login');
         SuccessToastWidget.show(context, response['message']);

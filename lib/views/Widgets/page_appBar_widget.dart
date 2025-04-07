@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PageAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final bool? showBackButton; // nullable
 
-  const PageAppBarWidget({super.key, required this.title});
+  const PageAppBarWidget({
+    super.key,
+    required this.title,
+    this.showBackButton, // không gán mặc định
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      // Đặt backgroundColor trong suốt để gradient hiển thị
       backgroundColor: Colors.transparent,
       elevation: 0,
-      // Sử dụng flexibleSpace để thêm gradient
+      automaticallyImplyLeading:
+          showBackButton ?? true, // hiển thị mặc định nếu không truyền vào
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color.fromARGB(255, 148, 170, 237), // Màu đậm ở dưới
-              Color(0xffEEF6FF), // Màu sáng ở trên
+              Color.fromARGB(255, 148, 170, 237),
+              Color(0xffEEF6FF),
             ],
           ),
         ),
       ),
       leadingWidth: 30,
       iconTheme: const IconThemeData(
-        color: Color(0xff3B4054), // Màu của icon back
+        color: Color(0xff3B4054),
       ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,7 +45,7 @@ class PageAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               color: Color(0xff3B4054),
             ),
           ),
-          // Nếu cần, có thể bật phần icon này
+          // Nếu bạn cần bật icon bên phải, bật phần này lên:
           // SvgPicture.asset(
           //   'assets/icons/close_icon.svg',
           //   height: 18,

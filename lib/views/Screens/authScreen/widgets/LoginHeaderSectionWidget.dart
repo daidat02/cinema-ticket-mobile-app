@@ -24,7 +24,7 @@ class LoginHeaderSectionWidget extends StatelessWidget {
                 color: Color(0xff61677D)),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
                 alignment: Alignment.center,
@@ -50,9 +50,6 @@ class LoginHeaderSectionWidget extends StatelessWidget {
                     )
                   ],
                 ),
-              ),
-              const SizedBox(
-                width: 20,
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 30),

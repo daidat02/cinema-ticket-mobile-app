@@ -41,7 +41,10 @@ class _FavoriteMoviesScreenState extends State<FavoriteMoviesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const PageAppBarWidget(title: 'Phim Yêu Thích'),
+      appBar: const PageAppBarWidget(
+        title: 'Phim Yêu Thích',
+        showBackButton: false,
+      ),
       body: Consumer<MovieProvider>(
         builder: (context, movieProvider, child) {
           if (_errorMessage != null) {
