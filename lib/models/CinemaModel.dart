@@ -1,21 +1,23 @@
 class Cinema {
   final String id;
   final String name;
-  final String? address;
+  final String? location;
   final String? imageUrl;
+  bool isFavorite;
 
   Cinema({
     required this.id,
     required this.name,
-    this.address,
+    this.location,
     this.imageUrl,
+    this.isFavorite = false,
   });
 
   factory Cinema.fromJson(Map<String, dynamic> json) {
     return Cinema(
       id: json['_id'],
       name: json['name'],
-      address: json['address'],
+      location: json['location'],
       imageUrl: json['imageUrl'],
     );
   }

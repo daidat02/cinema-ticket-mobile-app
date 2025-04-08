@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shop/models/TicketModel.dart';
+import 'package:shop/models/User.dart';
 import 'package:shop/views/Widgets/page_appBar_widget.dart';
 import 'package:shop/views/Widgets/postter_widget.dart';
 
