@@ -44,11 +44,11 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-    - assets/Illustration/
-    - assets/flags/
+    # - assets/Illustration/
+    # - assets/flags/
     - assets/logo/
-    - assets/screens/
-    - assets/files/
+    # - assets/screens/
+    # - assets/files/
 
   fonts:
     - family: Poppins

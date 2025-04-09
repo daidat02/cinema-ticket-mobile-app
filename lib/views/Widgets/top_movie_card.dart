@@ -72,9 +72,10 @@ class TopMovieCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       const Text(
-                        '8.5/10 (700 Đánh giá)', // Giá trị cứng tạm thời, bạn cần bổ sung trường rating vào model Movie
+                        '8.5/10 (700 Đánh giá)',
+                        // Giá trị cứng tạm thời, bạn cần bổ sung trường rating vào model Movie
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w400),
+                            fontSize: 10, fontWeight: FontWeight.w400),
                       ),
                     ],
                   ),

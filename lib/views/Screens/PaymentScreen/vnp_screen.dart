@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/models/TicketModel.dart';
+import 'package:shop/providers/authProvider.dart';
 import 'package:shop/services/API/api_payment_service.dart';
 import 'package:shop/views/Screens/PaymentScreen/widgets/payment_success_screen.dart';
 import 'package:shop/views/Widgets/toast_widget.dart';
@@ -69,16 +73,16 @@ class _VNPayScreenState extends State<VNPayScreen> {
 
       if ((responseCode == '00' || response['success'] == true)) {
         SuccessToastWidget.show(context, "Thanh toán thành công");
-
         // Sử dụng pushReplacement thay vì pop
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => PaymentSuccessScreen(
-              ticketId: response['data']['ticketId'],
+              ticket: Ticket.fromJson(response['data']['ticket']),
             ),
           ),
         );
+        await context.read<AuthProvider>().updateUserFromServer();
       } else {
         SuccessToastWidget.show(context, "Thanh toán bị hủy hoặc thất bại");
 

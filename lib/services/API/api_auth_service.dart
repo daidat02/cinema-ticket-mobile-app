@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shop/models/User.dart';
 import 'package:shop/providers/authProvider.dart';
 import 'package:shop/services/stores.dart';
 
@@ -49,6 +50,22 @@ class ApiAuthService {
         // Đăng nhập thất bại, trả về lỗi từ server
         throw (data['message'] ?? 'Lỗi không xác định');
       }
+    } catch (e) {
+      throw Exception('$e');
+    }
+  }
+
+  Future<User> getUser() async {
+    final url = Uri.parse(
+        'https://mbooking-server-production.up.railway.app/api/auth/user');
+    try {
+      final response = await http.get(url, headers: {
+        'token': 'Bearer ${await Storage.getAccessToken()}',
+      });
+
+      final user = jsonDecode(response.body);
+      print(user);
+      return User.fromJson(user['data']);
     } catch (e) {
       throw Exception('$e');
     }

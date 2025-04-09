@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/models/MovieModel.dart';
 import 'package:shop/models/User.dart';
@@ -26,8 +25,10 @@ class _MyHomePageState extends State<MyHomePage> {
   User? user;
   int _currentIndex = 0;
   List<Movie> movies = [];
+  List<Movie> nowShowingMovies = [];
+  List<Movie> comingSoonMovies = [];
   final MovieService _movieService = MovieService();
-  bool isPressed = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -49,8 +50,18 @@ class _MyHomePageState extends State<MyHomePage> {
       List<Movie> loadedMovies = await _movieService.loadMoviesApi();
       setState(() {
         movies = loadedMovies;
+        // Lọc phim đang chiếu (ngày phát hành <= ngày hiện tại)
+        nowShowingMovies = loadedMovies.where((movie) {
+          final releaseDate = DateTime.parse('${movie.releaseDate}' ?? '');
+          return releaseDate.isBefore(DateTime.now()) ||
+              releaseDate.isAtSameMomentAs(DateTime.now());
+        }).toList();
+        // Lọc phim sắp chiếu (ngày phát hành > ngày hiện tại)
+        comingSoonMovies = loadedMovies.where((movie) {
+          final releaseDate = DateTime.parse('${movie.releaseDate}' ?? '');
+          return releaseDate.isAfter(DateTime.now());
+        }).toList();
       });
-      // Tạo độ trễ 1 giây trước khi ẩn loading
       await Future.delayed(const Duration(seconds: 2));
       LoadingOverlay.hide();
     } catch (e) {
@@ -78,7 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Search
-              const SearchWidget(),
+              GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, '/search',
+                      arguments: movies),
+                  child: const SearchWidget()),
               const SizedBox(height: 10),
               Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -115,19 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
               sectionHeader('Phim Đang Chiếu', 'Xem tất cả', 0xFF007AFF,
                   '/list_movie', true),
               SizedBox(
-                height: 340, // Đặt chiều cao rõ ràng cho danh sách phim
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(right: 10),
-                  itemCount: movies.length,
-                  itemBuilder: (context, index) {
-                    return SizedBox(
-                      width: 180,
-                      height: 270, // Đặt chiều rộng cố định cho từng item
-                      child: TopMovieCard(movie: movies[index]),
-                    );
-                  },
-                ),
+                height: 340,
+                child: _buildListMovie(nowShowingMovies),
               ),
 
               LineWidget(),
@@ -135,26 +138,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
               sectionHeader('Phim Sắp Chiếu', 'Xem tất cả', 0xFF007AFF,
                   '/list_movie', false),
-
               SizedBox(
-                height: 340, // Đặt chiều cao rõ ràng cho danh sách phim
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(right: 10),
-                  itemCount: movies.length,
-                  itemBuilder: (context, index) {
-                    return SizedBox(
-                      width: 180,
-                      height: 270, // Đặt chiều rộng cố định cho từng item
-                      child: TopMovieCard(movie: movies[index]),
-                    );
-                  },
-                ),
+                height: 340,
+                child: _buildListMovie(comingSoonMovies),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  ListView _buildListMovie(List<Movie> movies) {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.only(right: 10),
+      itemCount: movies.length,
+      itemBuilder: (context, index) {
+        return SizedBox(
+          width: 180,
+          height: 270,
+          child: TopMovieCard(movie: movies[index]),
+        );
+      },
     );
   }
 }

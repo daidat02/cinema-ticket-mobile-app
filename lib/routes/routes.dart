@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:shop/models/DetailShowtime.dart';
 import 'package:shop/models/MovieModel.dart';
@@ -11,6 +9,7 @@ import 'package:shop/views/Screens/MovieScreen/detail_movie.dart';
 import 'package:shop/views/Screens/PaymentScreen/payment_screen.dart';
 import 'package:shop/views/Screens/PaymentScreen/vnp_screen.dart';
 import 'package:shop/views/Screens/PaymentScreen/widgets/payment_success_screen.dart';
+import 'package:shop/views/Screens/SearchScreen/search_screen.dart';
 import 'package:shop/views/Screens/SeatSelectionScreen/seat_selection_screen.dart';
 import 'package:shop/views/Screens/ShowtimeScreen/showtime_Screen.dart';
 import 'package:shop/views/Screens/ShowtimeScreen/showtime_cinema_screen.dart';
@@ -73,10 +72,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       }
     case '/payment_success':
       {
-        final String ticketId = settings.arguments as String;
+        final ticket = settings.arguments as Ticket;
         return MaterialPageRoute(
             builder: (context) => PaymentSuccessScreen(
-                  ticketId: ticketId,
+                  ticket: ticket,
                 ));
       }
     case '/ticket-detail':
@@ -100,6 +99,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                   paymentUrl: paymentUrl,
                 ));
       }
+    case '/search':
+      {
+        final movies = settings.arguments as List<Movie>;
+        return MaterialPageRoute(
+            builder: (context) => SearchScreen(
+                  movies: movies,
+                ));
+      }
+
     default:
       return MaterialPageRoute(builder: (context) => const MyHomePage());
   }

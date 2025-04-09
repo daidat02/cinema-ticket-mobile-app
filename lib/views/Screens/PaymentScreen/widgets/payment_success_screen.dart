@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop/constants/TextStyle.dart';
+import 'package:shop/models/TicketModel.dart';
 import 'package:shop/views/Screens/authScreen/widgets/submit_buttom_widget.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
-  final String ticketId;
-  const PaymentSuccessScreen({super.key, required this.ticketId});
+  final Ticket ticket;
+  const PaymentSuccessScreen({super.key, required this.ticket});
 
   @override
-  void _checkTicket() {
-    print('check vé: $ticketId');
+  void _checkTicket(BuildContext context) {
+    Navigator.pushNamed(context, '/ticket-detail', arguments: ticket);
   }
 
   @override
@@ -48,7 +49,9 @@ class PaymentSuccessScreen extends StatelessWidget {
               ),
             ),
             SubmitButtomWidget(
-                submitForm: _checkTicket, btnText: 'Xem Chi Tiết Vé'),
+              submitForm: () => _checkTicket(context), // Thêm context
+              btnText: 'Xem Chi Tiết Vé',
+            ),
             const SizedBox(
               height: 40,
             ),
